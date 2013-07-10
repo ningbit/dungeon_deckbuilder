@@ -10,6 +10,19 @@
   <%= @deck.description %>
 </p>
 
+<% @deck.cards.each_with_index do |card, index| %>
+	<h4>Card <%= index+1 %></h4>
+	<p>
+	  <b>Name:</b>
+	<%= card.name %>
+	</p>
+
+	<p>
+	  <b>Strength:</b>
+	<%= card.strength %>
+	</p>
+<% end %>
+
 
 <%= link_to 'Edit', edit_deck_path(@deck) %> |
 <%= link_to 'Back', decks_path %>

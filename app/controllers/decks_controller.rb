@@ -43,14 +43,10 @@ class DecksController < ApplicationController
     @deck = Deck.new()
     @deck.name = params[:deck][:name]
 
-    @deck.description = deck[:description]
+    @deck.description = params[:deck][:description]
 
     params[:cards].each do |card|
-      card = Card.new
-      card[:name] = card.name
-      card[:strength] = card.strength
-
-      @deck.cards << card
+      @deck.cards.build(card) if card[:name] != ""
     end
 
     if @deck.save
@@ -64,6 +60,16 @@ class DecksController < ApplicationController
   # PUT /decks/1.json
   def update
     @deck = Deck.find(params[:id])
+    params[:cards].each do |card|
+      if card[:id] != ""
+        update_card = Card.find_by_id(card[:id].to_i)
+        update_card.name = card[:name]
+        update_card.strength = card[:strength]
+        update_card.save
+      elsif card[:name] != ""
+      @deck.cards.build(card)
+      end
+    end   
 
     respond_to do |format|
       if @deck.update_attributes(params[:deck])

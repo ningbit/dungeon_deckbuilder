@@ -1,4 +1,4 @@
-<%= form_for(@deck) do |f| %>
+ <%= form_for(@deck) do |f| %>
   <% if @deck.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@deck.errors.count, "error") %> prohibited this deck from being saved:</h2>
@@ -12,14 +12,27 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <label for="deck_name">Name</label><br />
+    <input id="deck_name" name="deck[name]" size="30" type="text" value="<%= @deck.name if @deck %>" />
   </div>
   <div class="field">
-    <%= f.label :description %><br />
-    <%= f.text_field :description %>
+    <label for="deck_description">Description</label><br />
+    <input id="deck_description" name="deck[description]" size="30" type="text" value="<%= @deck.description if @deck %>" />
   </div>
+  <%  num = (@deck.cards.size + 1) if @deck.cards.size >= 3 %>
+  <% (num ||=3 ).times do |i| %>
+    <h4>Card <%= i+1 %></h4>
+    <div class="field">
+      <label for="cards_name">Name</label><br />
+      <input id="cards_name" name="cards[][name]" size="30" type="text" value="<%= @deck.cards[i].name if @deck.cards[i] %>" />
+    </div>
+    <div class="field">  
+      <label for="cards_strength">Strength</label><br />
+      <input id="cards_strength" name="cards[][strength]" size="30" type="text" value="<%= @deck.cards[i].strength if @deck.cards[i] %>" />
+    </div>
+    <input type=hidden name="cards[][id]" value="<%= @deck.cards[i].id if @deck.cards[i] %>"
+  <% end %>
   <div class="actions">
-    <%= f.submit %>
+    <input name="commit" type="submit" value="Save Deck" />
   </div>
 <% end %>
